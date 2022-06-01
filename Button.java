@@ -8,16 +8,12 @@ public class Button extends JButton {
 
 
     public Button(){
-        //super();
+        super();
         this.setBorderPainted(false);
-        this.setSize(200,70);
-        this.setIcon("src/button.png",this);
-        this.setMargin(new Insets(0,0,0,0));
-
-        this.setVerticalTextPosition(SwingConstants.BOTTOM);
-        this.setHorizontalTextPosition(SwingConstants.CENTER);
         this.setOpaque(false);
-        this.setFocusPainted(true);
+        this.setSize(130,70);
+        //this.setIcon("D:/src 3/src/button.png",this);
+        this.setMargin(new Insets(0,0,0,0));
 
 
         //this.setContentAreaFilled(false);

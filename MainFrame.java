@@ -1,8 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.net.*;
 
 public class MainFrame extends JFrame {
     private static ArrayList<JPanel> panels = new ArrayList<>();
@@ -21,8 +23,6 @@ public class MainFrame extends JFrame {
 
         this.initiateFrame("test title", frameSize);
 
-
-
         //Image icon = new ImageIcon("1.jpg").getImage();
         //JPanel panel = initiatePanel(new Tuple(600, 600), panelPen);
         BackgroundPanel panel = new BackgroundPanel();
@@ -40,68 +40,71 @@ public class MainFrame extends JFrame {
         JPanel panel2 = initiatePanel(new Tuple(600, 600), panelPen);
         panel2.add(new JLabel("This is panel2"));
         GamePanel gamePanel = new GamePanel();
-        this.addPanel(panel);
+        
 
-        JLabel label = new JLabel("Start The Game",JLabel.CENTER);
-        //JLabel label2 = new JLabel("  Game Setting",JLabel.CENTER);
+        //JLabel label = new JLabel("     Start",JLabel.CENTER);
+
+        //JLabel label1 = new JLabel("   Read",JLabel.CENTER);
+
+//        JLabel label2 = new JLabel("  Game Setting",JLabel.CENTER);
         JLabel label3 = new JLabel("  Explanation",JLabel.CENTER);
-        Font font1 = new Font("Chalkduster", Font.PLAIN,20);
+        Font font1 = new Font("Bangla MN", Font.BOLD,20);
         JButton musicbutton = new JButton("music");
-        musicbutton.setBounds(0,0,50,50);
-
-
-
+        musicbutton.setBounds(0,0,80,30);
 
         panel.add(musicbutton);
 
-        label.setFont(font1);
-        //label2.setFont(font1);
-        label3.setFont(font1);
+        //label.setFont(font1);
 
+        //label1.setFont(font1);
+        
+//        label2.setFont(font1);
+        label3.setFont(font1);
 
         Button button1 = new Button();
 
+        Button buttonload = new Button();
+        button1.setIcon("src/start.png",button1);
+        buttonload.setIcon("src/read.png",buttonload);
 
-        button1.add(label,JLabel.CENTER);
+        //button1.add(label,JLabel.CENTER);
 
+        button1.setBounds(60,310,130,70);
 
-        //button1.setFocusPainted(false);
-        button1.setVerticalTextPosition(SwingConstants.BOTTOM);
-        button1.setHorizontalTextPosition(SwingConstants.CENTER);
-        button1.setBounds(40,310,200,70);
+       // buttonload.add(label1,JLabel.CENTER);
+        buttonload.setBounds(210,310,130,70);
 
+//        ButtonGroup button2 = new ButtonGroup();
+//        button2.add(label2);
+//        button2.setBounds(360,310,200,70);
 
-        ButtonGroup button2 = new ButtonGroup();/*{
+        ButtonGroup button2=new ButtonGroup() {
             @Override
-            protected void paintComponent(Graphics g){
-                int x=0;
-                int y=0;
+            protected void paintComponent(Graphics g) {
+                int x = 0;
+                int y = 0;
                 super.paintComponent(g);
-                ImageIcon img = new ImageIcon("src/button2.png");
+                ImageIcon img = new ImageIcon("src/level.png");
                 //img.paintIcon(this,g,0,0);
                 g.drawImage(img.getImage(), x, y, getSize().width,
                         getSize().height, this);// 图片会自动缩放
 //    g.drawImage(icon.getImage(), x, y,this);//图片不会自动缩放
                 repaint();
-
             }
-        };*/
-        //button2.setOpaque(false);
-        //button2.add(label2);
-        button2.setBounds(360,310,200,70);
-        //button2.setOpaque(false);
-
-
+        };
+        button2.setBounds(360,310,130,70);
 
         Button button3 = new Button();
         button3.add(label3);
         button3.setBounds(200,380,225,80);
-//
+
         panel.add(button1);
         panel.add(button2);
+
+        panel.add(buttonload);
         //panel.add(button3);
 //        Tertris.setIsrunning(false);
-
+        this.addPanel(panel);
         Tertris tertris = new Tertris(panel, music);
         button1.addActionListener(new ActionListener() {
             @Override
@@ -126,7 +129,58 @@ public class MainFrame extends JFrame {
                         tertris.startcount+=1;
                     }
                 }.start();
+                // Thread.currentThread().interrupt();
+                // System.out.println(" 是否停止 1 ? ="+Thread.interrupted());
+            }
+        });
 
+        buttonload.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+//                 tertris.init();
+
+                //setPanel((JPanel) button1.getParent(), tertris);
+                //tertris.game_begin(tertris);
+                //Tertris.setIsrunning(true);
+
+                new Thread() {
+
+                    public void run() {
+                        // TODO Auto-generated method stub
+
+                        super.run();
+                        tertris.stroecount=0;
+                        fileSaveandLoad fileload = new fileSaveandLoad();
+                        tertris.isrunning=true;
+                        tertris.game_pause=false;
+                        
+                        fileload.loadGameData(tertris,"D:/src 3/src/data.dat","data");
+
+                        fileload.loadGameData(tertris,"D:/src 3/src/rect.dat","rect");
+                        fileload.loadGameData(tertris,"D:/src 3/src/score.dat","score");
+                        
+                        fileload.loadGameData(tertris,"D:/src 3/src/x.dat","x");
+                        fileload.loadGameData(tertris,"D:/src 3/src/y.dat","y");
+                        fileload.loadGameData(tertris,"D:/src 3/src/recordColor.dat","recordColor");
+                        // fileload.loadGameData(tertris,"D:/src 3/src/text.txt","text");
+                        for (int i = 24;i >= 1;i--) {
+                                for (int j = 1;j <= (10);j++) {
+                                    if(tertris.data[i][j]==1){
+                                        tertris.text[i][j].setBackground(tertris.recordColor[i][j]);
+                                        // System.out.print("blue");
+                                    }
+                                }}
+                        //tertris.resetData();
+                        tertris.time=1000;
+                        tertris.label.setText("游戏得分: "+tertris.score);
+                        
+                        tertris.game_begin(panel,sp);
+                        
+                        tertris.startcount+=1;
+                        
+                    }
+                }.start();
+            
             }
         });
 
@@ -146,6 +200,7 @@ public class MainFrame extends JFrame {
             }
         });
         button1.addActionListener(event -> this.setPanel((JPanel) button1.getParent(), tertris));
+        buttonload.addActionListener(event -> this.setPanel((JPanel) button1.getParent(), tertris));
         //tertris.game_begin(panel);
         //button2.addActionListener(event -> mainFrame.setPanel((JPanel) button2.getParent(), panel));
         button3.addActionListener(new ActionListener() {
@@ -174,6 +229,10 @@ public class MainFrame extends JFrame {
 
 
     }
+    public class ServerThread extends Thread {
+        //volatile修饰符用来保证其它线程读取的总是该变量的最新的值
+        
+        }
 
     /**
      * 关于如何合作
@@ -186,7 +245,7 @@ public class MainFrame extends JFrame {
 
     private void initiateFrame(String title, Tuple size) {
         new JFrame(title);
-        this.setTitle("俄罗斯方块");
+        this.setTitle("Tertris");
         //BackgroundPanel backgroundPanel= new BackgroundPanel();
         //this.add(backgroundPanel);
         //窗口标题

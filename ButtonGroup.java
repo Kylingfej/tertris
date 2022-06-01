@@ -5,30 +5,31 @@ import java.awt.event.ActionListener;
 
 public class ButtonGroup extends JMenuBar {
 
-
-
     public ButtonGroup(){
-       super();
+        super();
         //JMenuBar x = new JMenuBar();
-        this.setSize(300,90);
+        this.setSize(130,70);
         this.setBorderPainted(false);
-        this.setOpaque(true);
+        this.setOpaque(false);
 
 
 
-        Font t = new Font("Chalkduster",Font.BOLD,23);
-        JMenu l1 = new JMenu(" Difficulty");
-        l1.setFont(t);
-        ImageIcon imageIcon = new ImageIcon("src/button2.png");
-        l1.setIcon(imageIcon);
-        //setIcon("src/button2.png",l1);
+        //Font t = new Font("Bangla MN", Font.BOLD,25);
+        JMenu l1 = new JMenu("                                       ");
+        l1.setOpaque(false);
+        l1.setBorderPainted(false);
+
+        //1.setFont(t);
+//        ImageIcon imageIcon = new ImageIcon("src/level.png");
+//        l1.setIcon(imageIcon);
+        //setIcon("src/level.png",l1);
         l1.setOpaque(false);
 
-        l1.setSize(180,70);
+        l1.setBounds(0,0,130,70);
         //l1.setBorderPainted(false);
         //l1.setContentAreaFilled(false);
 
-        this.add(l1, BorderLayout.CENTER);
+        this.add(l1);
 
 
         //JMenu l2= new JMenu("l2");
@@ -53,20 +54,13 @@ public class ButtonGroup extends JMenuBar {
             }
         });
 
-
-
-
-
-
-
-
     }
-    public void setIcon(String file,JMenu com)
-    {
+    public void setIcon(String file,JMenu com) {
         ImageIcon ico=new ImageIcon(file);
         Image temp=ico.getImage().getScaledInstance(com.getWidth()+10,com.getHeight()+10,ico.getImage().SCALE_DEFAULT);
         ico=new ImageIcon(temp);
         com.setIcon(ico);
     }
+
 
 }

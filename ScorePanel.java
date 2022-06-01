@@ -28,7 +28,7 @@ ArrayList<Integer> list;
         title.setBounds(80,0,150,50);
         this.add(title);
 
-        int x=130;int y=35;
+        int x=135;int y=35;
         for(int i=0;i<5;i++) {
             num[i] = new JLabel("");
             num[i].setBounds(x, y, 180, 30);
@@ -41,6 +41,8 @@ ArrayList<Integer> list;
 
 
         }
+
+
     public void changeFirst(int score){
         setList(score);
 
@@ -62,14 +64,15 @@ ArrayList<Integer> list;
     }
 
     public void addScore(int score){
-        int x=10;int y=50;
+        int x=10;int y=70;
         String num =Integer.toString(score);
-        getNum(0).setText(num);
-        Font m = new Font("Bangla MN",Font.BOLD,60);
-        getNum(0).setFont(m);
-        getNum(0).setBounds(130,35,200,200);
+        JLabel order = new JLabel(num);
+        Font F= new Font("Arial",Font.BOLD,65);
+        order.setFont(F);
+        order.setForeground(Color.pink);
+        order.setBounds(90,35,200,200);
         setList(score);
-
+        this.add(order,JLabel.CENTER);
 
     }
     public void display(){

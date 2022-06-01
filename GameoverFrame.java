@@ -8,9 +8,8 @@ public class GameoverFrame extends JFrame {
 
 
     public GameoverFrame(JPanel panel,int score,JPanel panel1){
-
         JButton re= new JButton("Return");
-        JButton begin= new JButton("Restart");
+        JButton begin= new JButton("Quit");
 
         re.addActionListener(e->{
 
@@ -21,37 +20,17 @@ public class GameoverFrame extends JFrame {
             panel.setVisible(true);
         });
 
-        //Tertris tertris = new Tertris(panel,music);
-        //panel.add(tertris);
-        //panel.add(tertris);
-        Tertris tertris = new Tertris(panel,music);
         begin.addActionListener(e -> {
-                    this.setVisible(false);
-                    panel.add(tertris);
-                    panel.setVisible(false);
-                    //panel.setVisible(true);
-                    tertris.setVisible(true);
-                    //tertris.game_begin();
-
-                }
-
-        );
-
-
-
-
-
+//            this.setVisible(false);
+//            panel1.setVisible(true);
+            System.exit(0);
 
             //tertris.setVisible(true);
-
-
-
-
             //panel.setVisible(true);
 
+        });
 
-
-        ImageIcon img = new ImageIcon("src/giphy2.gif");
+        ImageIcon img = new ImageIcon("D:/src 3/src/giphy2.gif");
 
         /*JLabel bac = new JLabel(img);
         bac.setBounds(0,0,400,600);
@@ -72,15 +51,19 @@ public class GameoverFrame extends JFrame {
 
             }
         };
+        //back.setOpaque(false);
         back.setSize(400,600);
         back.setLayout(null);
         this.add(back);
 
 
         JButton gameover = new JButton();
+        gameover.setOpaque(false);
         gameover.setBorderPainted(false);
+//        gameover.setOpaque(false);
         setIcon("src/giphy1.gif",gameover);
         gameover.setBounds(0,0,400,150);
+        gameover.setBackground(Color.black);
 
         this.setLayout(null);
         display.setBounds(50,160,300,300);

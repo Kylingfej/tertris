@@ -14,8 +14,8 @@ import java.util.TimerTask;
 import java.net.URL;
 public class Tertris extends JPanel implements KeyListener{
     //游戏的行数26,列数12
-    private static final int game_x = 26;
-    private static final int game_y = 12;
+    public static final int game_x = 26;
+    public static final int game_y = 12;
     JButton start;
     //文本域数组
     JTextArea[][] text;
@@ -30,26 +30,33 @@ public class Tertris extends JPanel implements KeyListener{
     //用于存储所有的方块的数组
     int[] allRect;
     //用于存储当前方块的变量
-    int rect;
+    static int rect;
     //线程的休眠时间
     static int time = 1000;
     //表示方块坐标
     int x, y;
     //该变量用于计算得分
-    int score = 0;
+    int score=0;
     //定义一个标志变量,用于判断游戏是否暂停
     boolean game_pause = false;
     //定义一个变量用于记录按下暂停键的次数
     int pause_times = 0;
-    JButton button4 = new JButton("暂停游戏");
+    JButton button4 = new JButton();
     public static int startcount=1;
     public static int countmusic = 0;
+     int stroecount = 1;
+     int stroex = 0;
+     int stroey = 0;
     int[] Falldown;
     Color[][] recordColor;
-    Color[] list={Color.CYAN,Color.ORANGE,Color.pink,Color.GRAY,Color.yellow,Color.blue};
+    Color first = new Color(255,183,209);
+    Color second = new Color(131,238,255);
+    Color third = new Color(108,255,138);
+    Color forth = new Color(255,243,149);
+    Color fifth = new Color(241,189,255);
+    Color sixth = new Color(255,148,137);
+    Color[] list={first,second,third,forth,fifth,sixth};
     Color present;
-
-
     static public void setTime(int t){
         time = t;
     }
@@ -57,8 +64,6 @@ public class Tertris extends JPanel implements KeyListener{
     static public void setIsrunning(boolean type){
         isrunning = type;
     }
-
-
 
     //初始化游戏界面
     public void initGamePanel(JPanel game_main) {
@@ -77,7 +82,7 @@ public class Tertris extends JPanel implements KeyListener{
                 text[i][j].addKeyListener(this);
                 //初始化游戏边界
                 if (j == 0 || j == text[i].length-1 || i == text.length-1) {
-                    text[i][j].setBackground(Color.black);
+                    text[i][j].setBackground(Color.BLACK);
                     data[i][j] = 1;
                 }
                 //设置文本区域不可编辑
@@ -93,48 +98,120 @@ public class Tertris extends JPanel implements KeyListener{
 
     //初始化游戏的说明面板
     public void initExplainPanel(JPanel panel,music music) {
-        //创建游戏的左说明面板
-        JPanel explain_left = new JPanel();
-        //创建游戏的右说明面板
-        JPanel explain_right = new JPanel();
-        // JPanel explain_top = new JPanel();
-        explain_left.setLayout(new GridLayout(4,1));
-        explain_right.setLayout(new GridLayout(2,1));
-        // explain_top.setLayout(new GridLayout(1,1));
+//        //创建游戏的左说明面板
+//        JPanel explain_left = new JPanel();
+//        //创建游戏的右说明面板
+//        JPanel explain_right = new JPanel();
+//        // JPanel explain_top = new JPanel();
+//        explain_left.setLayout(new GridLayout(4,1));
+//        explain_right.setLayout(new GridLayout(2,1));
+//        // explain_top.setLayout(new GridLayout(1,1));
+//
+//        //初始化左说明面板
+//
+//        //在左说明面板,添加说明文字
+//        explain_left.add(new JLabel("按空格键,方块变形"));
+//        explain_left.add(new JLabel("按左箭头,方块左移"));
+//        explain_left.add(new JLabel("按右箭头,方块右移"));
+//        explain_left.add(new JLabel("按下箭头,方块下落"));
+//        //设置标签的内容为红色字体
+//        label1.setForeground(Color.RED);
+//        //把游戏状态标签,游戏分数标签,添加到右说明面板
+//        explain_right.add(label);
+//        explain_right.add(label1);
+//        //将左说明面板添加到窗口的左侧
+//        this.add(explain_left,BorderLayout.WEST);
+//        //将右说明面板添加到窗口的右侧
+//        this.add(explain_right,BorderLayout.EAST);
+//        initPausePanel(panel,music);
+        JPanel explain_right = new JPanel(){
+            protected void paintComponent(Graphics g){
+                int x=0;
+                int y=0;
+                super.paintComponent(g);
+                ImageIcon img = new ImageIcon("src/x.jpg");
+                //img.paintIcon(this,g,0,0);
+                g.drawImage(img.getImage(), x, y, getSize().width,
+                        getSize().height, this);// 图片会自动缩放
+//    g.drawImage(icon.getImage(), x, y,this);//图片不会自动缩放
 
-        //初始化左说明面板
 
-        //在左说明面板,添加说明文字
-        explain_left.add(new JLabel("按空格键,方块变形"));
-        explain_left.add(new JLabel("按左箭头,方块左移"));
-        explain_left.add(new JLabel("按右箭头,方块右移"));
-        explain_left.add(new JLabel("按下箭头,方块下落"));
-        //设置标签的内容为红色字体
-        label1.setForeground(Color.RED);
+            }
+        };
+        explain_right.setLayout(new GridLayout(2,5));
+
+        Font type = new Font("楷体",Font.BOLD,20);
+        label1.setForeground(Color.WHITE);
+        label.setFont(type);
+        label.setForeground(Color.white);
+        label1.setFont(type);
         //把游戏状态标签,游戏分数标签,添加到右说明面板
         explain_right.add(label);
         explain_right.add(label1);
         //将左说明面板添加到窗口的左侧
-        this.add(explain_left,BorderLayout.WEST);
+        //this.add(explain_left,BorderLayout.WEST);
         //将右说明面板添加到窗口的右侧
         this.add(explain_right,BorderLayout.EAST);
         initPausePanel(panel,music);
+
     }
 
     //设置暂停界面
     public void initPausePanel(JPanel panel,music music){
-        JPanel explain_top = new JPanel();
+//        JPanel explain_top = new JPanel();
+
+        JPanel explain_top = new JPanel(){
+            @Override
+            protected void paintComponent(Graphics g){
+                int x=0;
+                int y=0;
+                super.paintComponent(g);
+                ImageIcon img = new ImageIcon("src/1.jpg");
+                //img.paintIcon(this,g,0,0);
+                g.drawImage(img.getImage(), x, y, getSize().width,
+                        getSize().height, this);// 图片会自动缩放
+//    g.drawImage(icon.getImage(), x, y,this);//图片不会自动缩放
+
+            }
+        };
+        JPanel panel1 =new JPanel(){
+            @Override
+            protected void paintComponent(Graphics g){
+                int x=0;
+                int y=0;
+                super.paintComponent(g);
+                ImageIcon icon = new ImageIcon("src/dark.jpg");
+                //img.paintIcon(this,g,0,0);
+                g.drawImage(icon.getImage(), x, y, getSize().width,
+                        getSize().height, this);// 图片会自动缩放
+//    g.drawImage(icon.getImage(), x, y,this);//图片不会自动缩放
+
+            }
+        };
 
         //设置背景
         JLabel label = new JLabel(); // 创建一个标签组件对象
 
-        ImageIcon icon = new ImageIcon("src/1.jpg"){
 
-        }; // 创建背景图片对象
-        label.setIcon(icon); // 设置标签组件要显示的图标
-        label.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight()); // 设置组件的显示位置及大小
+//        label.setIcon(icon); // 设置标签组件要显示的图标
+//        label.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight()); // 设置组件的显示位置及大小
 
-        JButton musicb = new JButton("music");
+//        JButton musicb = new JButton("music");
+        JLabel condition = new JLabel("                             Music");
+        JButton musicb = new JButton();
+
+        musicb.add(condition);
+        condition.setForeground(Color.BLUE);
+
+        musicb.setOpaque(false);
+        musicb.setBorderPainted(false);
+        JLabel condition2 = new JLabel("                    Pause");
+        condition2.setForeground(Color.BLUE);
+        button4.add(condition2);
+        button4.setOpaque(false);
+        button4.setBorderPainted(false);
+
+
         musicb.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -156,12 +233,11 @@ public class Tertris extends JPanel implements KeyListener{
         explain_top.add(button4);
         //explain_top.add(start);
 
-
         this.add(explain_top,BorderLayout.SOUTH);
         JButton button5 = new JButton("Resume");
-//        JButton button6 = new JButton("Options");
+        JButton button6 = new JButton("Store");
         JButton button7 = new JButton("How to play");
-        JButton button8 = new JButton("Quit");
+        JButton button8 = new JButton("Return");
 
 
         JFrame Pauseframe = new JFrame("Pause");
@@ -170,35 +246,47 @@ public class Tertris extends JPanel implements KeyListener{
         //	窗体大小
         Pauseframe.setSize(300,300);
         //显示窗体
-        Pauseframe.getLayeredPane().add(label,new Integer(Integer.MIN_VALUE));
+        Pauseframe.getLayeredPane().add(label,new Integer(Integer.MAX_VALUE));
         JPanel j=(JPanel)Pauseframe.getContentPane();
         j.setOpaque(false);
 
-        JPanel panel1 =new JPanel();
+        panel.setLayout(null);
 
 
         //改变字体
-        Font f=new Font("Times New Roman",Font.BOLD,14);
-        button5.setPreferredSize(new Dimension(200, 50));
-//        button6.setPreferredSize(new Dimension(200, 50));
+        Font f=new Font("Arial",Font.BOLD,20);
+
+        button5.setBounds(150,30,100,30);
+        button6.setBounds(150,110,100,30);
+        button7.setBounds(150,190,100,30);
+        button8.setBounds(150,270,100,30);
+        j.add(button5);
+        j.add(button6);
+
+        j.add(button7);
+
+        j.add(button8);
+
+        /*button5.setPreferredSize(new Dimension(200, 50));
+        button6.setPreferredSize(new Dimension(200, 50));
         button7.setPreferredSize(new Dimension(200, 50));
         button8.setPreferredSize(new Dimension(200, 50));
         button5.setFont(f);
-//        button6.setFont(f);
+        button6.setFont(f);
         button7.setFont(f);
         button8.setFont(f);
 
         //箱式布局
         Box vBox = Box.createVerticalBox();
         vBox.add(button5);
-//        vBox.add(Box.createVerticalStrut(30));//两个方向都可以拉伸的间隔
-//        vBox.add(button6);
+        vBox.add(Box.createVerticalStrut(30));//两个方向都可以拉伸的间隔
+        vBox.add(button6);
         vBox.add(Box.createVerticalStrut(30));//两个方向都可以拉伸的间隔
         vBox.add(button7);
         vBox.add(Box.createVerticalStrut(30));//两个方向都可以拉伸的间隔
         vBox.add(button8);
         vBox.add(Box.createVerticalStrut(30));//两个方向都可以拉伸的间隔
-        panel1.add(vBox);
+        panel1.add(vBox);*/
 
         panel1.setOpaque(false);
         Pauseframe.add(panel1);
@@ -222,13 +310,38 @@ public class Tertris extends JPanel implements KeyListener{
                 label1.setText("游戏状态: 游戏进行!");
 
             }});
+        button6.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                game_pause=true;     
+                            
+                SaveGmaeData("D:/src 3/src/data.dat","data");
+                SaveGmaeData("D:/src 3/src/rect.dat","rect");
+                SaveGmaeData("D:/src 3/src/score.dat","score");
+                SaveGmaeData("D:/src 3/src/x.dat","x");
+                SaveGmaeData("D:/src 3/src/y.dat","y");
+                SaveGmaeData("D:/src 3/src/recordColor.dat","recordColor");
+                
+                    
+//                game_pause=false;
+                isrunning = false;
+                game_clear(panel);
+                
+                Pauseframe.setVisible(false);
+                panel.setVisible(true);
+
+    
+        }});
 
         button7.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "how to play","游戏说明",JOptionPane.INFORMATION_MESSAGE);
+                String explain = "> 向右移动" +
+                        "\n\n<   向左移动"+"\n\n ^ 向上移动"+"\n\n v 向下移动"+"\n\n space   变换形状";
+                JOptionPane.showMessageDialog(null, explain,"游戏说明",JOptionPane.INFORMATION_MESSAGE);
 
             }});
+
         button8.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -237,20 +350,52 @@ public class Tertris extends JPanel implements KeyListener{
                 game_pause=true;
                 game_clear(panel);
 
-                Pauseframe.setVisible(false);
-                // game_main.setVisible(false);
+                    Pauseframe.setVisible(false);
+                    // game_main.setVisible(false);
 
 
-                //    button4.setVisible(false);
-                panel.setVisible(true);
+                    //    button4.setVisible(false);
+                    panel.setVisible(true);
 
                 // JOptionPane.showConfirmDialog(null, "game over","游戏结束",JOptionPane.INFORMATION_MESSAGE);
-                int n=JOptionPane.showConfirmDialog(null,"YOUR SCORE IS： "+score,"GAME OVER",JOptionPane.DEFAULT_OPTION);
+                int n=JOptionPane.showConfirmDialog(null,"Your score is: "+score,"GAMEOVER",JOptionPane.DEFAULT_OPTION);
             }});
 
     }
 
+    //新加的
+    public void SaveGmaeData(String string,String name){
+        try {
+            File file = new File(string);
+            FileOutputStream fileStream = new FileOutputStream(file,false);
+            ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
+            if(name=="data"){
+                objectStream.writeObject(data);
+            }if(name == "rect"){
+                objectStream.writeObject(rect);
+            }if(name == "score"){
+                objectStream.writeObject(score);
+            }if(name == "x"){
+                objectStream.writeObject(stroex);
+            }if(name == "y"){
+                objectStream.writeObject(stroey);
+            }if (name=="recordColor"){
+                objectStream.writeObject(recordColor);
+            }
+            
+            
+            objectStream.close();
+            fileStream.close();
+            // label1.setText("1");
+            // System.out.print(2);
+            
 
+        }
+        catch (Exception e) {
+//            System.out.print(1);
+        }
+        
+    }
 
     public Tertris(JPanel panel,music music) {
         start=new JButton("start");
@@ -266,9 +411,9 @@ public class Tertris extends JPanel implements KeyListener{
         text = new JTextArea[game_x][game_y];
         data = new int[game_x][game_y];
         //初始化表示游戏状态的标签
-        label1 = new JLabel("游戏状态: 游戏进行!");
+        label1 = new JLabel(" 游戏状态: 游戏进行!");
         //初始化表示游戏分数的标签
-        label = new JLabel("游戏得分为: 0");
+        label = new JLabel(" 游戏得分为:"+score);
         JPanel game_main = new JPanel();
         initGamePanel(game_main);
         initExplainPanel(panel,music);
@@ -285,35 +430,31 @@ public class Tertris extends JPanel implements KeyListener{
                 0x08c4, 0x006c, //S
                 0x04c8, 0x00c6, //倒S
                 0x08c8, 0x004e, 0x04c4, 0x00e4//T形
-
-
         };
         recordColor= new Color[game_x][game_y];
 
     }
 
-
-
-    public void game_begin() {
-        while (true){
-            //判断游戏是否结束
-            if (!isrunning) {
-                System.out.print(1);
-                break;
-            }
-
-            //进行游戏
-            game_run();
-        }
-        //在标签位置显示"游戏结束"
-        label1.setText("游戏状态: 游戏结束!");
-        this.setVisible(false);
-        //GameoverFrame gameoverFrame = new GameoverFrame(this);
-        //gameoverFrame.setVisible(true);
-        game_clear(this);
-
-
-    }
+//    public void game_begin() {
+//        while (true){
+//            //判断游戏是否结束
+//            if (!isrunning) {
+//                // System.out.print(1);
+//                break;
+//            }
+//
+//            //进行游戏
+//            game_run();
+//        }
+//        //在标签位置显示"游戏结束"
+//        label1.setText("游戏状态: 游戏结束!");
+//        this.setVisible(false);
+//        //GameoverFrame gameoverFrame = new GameoverFrame(this);
+//        //gameoverFrame.setVisible(true);
+//        game_clear(this);
+//
+//
+//    }
 
     //开始游戏的方法
     public void game_begin(JPanel panel,ScorePanel scorePanel) {
@@ -321,36 +462,40 @@ public class Tertris extends JPanel implements KeyListener{
         isrunning=true;
         //game_clear(panel);
         int flag = 0;
-        while (true) {
-            //判断游戏是否结束
-            if (!isrunning) {
-                break;
+            while (true) {
+                //判断游戏是否结束
+                
+                if (!isrunning) {
+//                     Thread.currentThread().interrupt();
+//                    System.out.println(" 1");
+                    break;
+                }
+
+                int value = game_run();
+
+                //进行游戏
+                if(value == 0 && !isrunning)
+                {
+//                    System.out.println(" 2");
+                    flag = 1;
+                    break;
+                }
             }
 
-            int value = game_run();
+            //在标签位置显示"游戏结束"
+            label1.setText("游戏状态: 游戏结束!");
 
-            //进行游戏
-            if(value == 0 && !isrunning)
-            {
-                flag = 1;
-                break;
+            this.setVisible(false);
+            if(flag == 0) {
+                GameoverFrame gameoverFrame = new GameoverFrame(panel,score,this);
+                gameoverFrame.setVisible(true);
+
             }
-        }
-
-        //在标签位置显示"游戏结束"
-        label1.setText("游戏状态: 游戏结束!");
-
-        this.setVisible(false);
-        if(flag == 0) {
-            GameoverFrame gameoverFrame = new GameoverFrame(panel,score,this);
-            gameoverFrame.setVisible(true);
-
-        }
         //scorePanel.setList(score);
         //scorePanel.display();
         scorePanel.changeFirst(score);
-        game_clear(this);
-        //game_begin(panel);
+            game_clear(this);
+            //game_begin(panel);
 
     }
 
@@ -361,15 +506,14 @@ public class Tertris extends JPanel implements KeyListener{
                 data[i][j] = 0;
                 text[i][j].setBackground(Color.WHITE);
                 recordColor[i][j]=Color.WHITE;
-
             }
         }
         score = 0;
-        label1.setText("游戏状态: 进行中!");
+
+        label1.setText("游戏状态: 游戏进行!");
         label.setText("游戏得分为: " + score);
         Tertris.setTime(1000);
     }
-
 
 
     //随机生成下落方块形状的方法
@@ -380,23 +524,47 @@ public class Tertris extends JPanel implements KeyListener{
     }
 
     //游戏运行的方法
+    
     public int game_run() {
         ranRect();
         present=list[(int)(Math.random()*6)];
+        if (stroecount!=0){
+            ranRect();}else{
+            stroecount=1;
+            x=stroex;
+            y=stroey;
+
+        }
+
         //方块下落位置
         x = 0;
-
         y = 5;
         int flag = 0;
         for (int i = 0; i < game_x; i++) {
             try {
+                
                 Thread.sleep(time);
                 {
+                    // if(!isrunning){
+                    //     break;
+                    // }
+
+                    if(!isrunning){
+                        Thread.currentThread().interrupt();
+                        break;
+                    }
                     if (!game_pause) {
+                        //新加的
+                        stroex=x;
+                        stroey=y;
+
                         //判断方块是否可以下落
                         if (!canFall(x, y)) {
                             //将data置为1,表示有方块占用
                             changData(x, y);
+                            //新加的
+                            stroex=x;
+                            stroey=y;
                             //循环遍历4层,看是否有行可以消除
                             for (int j = x; j < x + 4; j++) {
                                 int sum = 0;
@@ -425,8 +593,15 @@ public class Tertris extends JPanel implements KeyListener{
                         } else {
                             //层数+1
                             x++;
+                            //新加的
+                            stroex=x;
+                            stroey=y;
                             //方块下落一行
                             fall(x, y);
+                            //新加的
+                            stroex=x;
+                            stroey=y;
+                            
                         }
                     }
                 }
@@ -436,7 +611,6 @@ public class Tertris extends JPanel implements KeyListener{
         }
         return 0;
     }
-
     //判断方块是否可以继续下落的方法
     public boolean canFall(int m,int n) {
         //定义一个变量
@@ -490,7 +664,7 @@ public class Tertris extends JPanel implements KeyListener{
         }
         //刷新游戏区域
         //if(!game_pause)
-        reflesh(row);
+          reflesh(row);
 
         //方块加速
         if (time > temp) {
@@ -536,7 +710,7 @@ public class Tertris extends JPanel implements KeyListener{
             for (int j = 0;j < 4;j++) {
                 if ((temp & rect) != 0) {
                     text[m][n].setBackground(Color.WHITE);
-                    recordColor[m][n]=Color.white;
+                    recordColor[i][j]=Color.WHITE;
                 }
                 n++;
                 temp >>= 1;
@@ -565,48 +739,8 @@ public class Tertris extends JPanel implements KeyListener{
     }
 
 
-    public void SaveGmaeData(File file){
-        try {
-            FileOutputStream fileStream = new FileOutputStream(file);
-            ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
-            objectStream.writeObject(text);
-            objectStream.writeObject(rect);
-            objectStream.writeObject(x);
-            objectStream.writeObject(y);
-            objectStream.writeObject(isrunning);
-            objectStream.writeObject(data);
-            objectStream.writeObject(score);
-            objectStream.writeObject(game_x);
-            objectStream.writeObject(game_y);
-            objectStream.writeObject(time);
-            objectStream.writeObject(allRect);
-            objectStream.writeObject(pause_times);
-            objectStream.writeObject(game_pause);
-            fileStream.close();
-            label1.setText("1");
-        }
-        catch (Exception e) {
-            label1.setText("2");
-        }
-    }
-    // public void loadGameData(File file){
-    //     try {
-    //     JTextArea[][] svaedtext;
-    //     FileInputStream fileStream = new FileInputStream(file);
-    //     ObjectInputStream objectStream = new ObjectInputStream(fileStream);
-    //     svaedtext = (JTextArea[][]) objectStream.readObject();
-    //     objectStream.close();
-    //     fileStream.close();
-    //     if (svaedtext != null){
-    //         text = svaedtext;
-
-
-    //     }
-    //     }catch (Exception e) {
-    //         label1.setText("4");
-    //     }
-
-    // }
+    
+    
     @Override
 
     public void keyTyped(KeyEvent e) {
@@ -623,14 +757,14 @@ public class Tertris extends JPanel implements KeyListener{
             //判断按下一次,暂停游戏
             if (game_pause = true) {
 
-                label1.setText("游戏状态: 暂停中!");
+                label1.setText("游戏状态: 游戏暂停!");
 
             }
             //判断按下两次,继续游戏
             if (game_pause = false) {
 
 
-                label1.setText("游戏状态: 进行中!");
+                label1.setText("游戏状态: 游戏进行!");
             }
         }
 
@@ -657,9 +791,6 @@ public class Tertris extends JPanel implements KeyListener{
 
             //定义变量,存储变形后方块
             int next;
-
-            //判断是方块
-
 
             //清除当前方块
             clear(x,y);

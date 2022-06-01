@@ -8,7 +8,7 @@ public class BackgroundPanel extends JPanel {
         int x=0;
         int y=0;
         super.paintComponent(g);
-        ImageIcon img = new ImageIcon("src/2.jpeg");
+        ImageIcon img = new ImageIcon("D:/src 3/src/2.jpeg");
         //img.paintIcon(this,g,0,0);
         g.drawImage(img.getImage(), x, y, getSize().width,
                 getSize().height, this);// 图片会自动缩放
